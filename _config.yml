@@ -1,8 +1,6 @@
 theme: jekyll-theme-slate
 title: Dai Chao
-description: |
-  Put your faith in the Light!
-  📧 fordring866@gmail.com
+description: fordring866@gmail.com | Put your faith in the Light!
 plugins:
   - jekyll-relative-links
 relative_links:
