@@ -1120,7 +1120,7 @@ table.capped-list td.middle{text-align:center}table.capped-list .favicon{width:1
 	&lt;做测试&gt;
 }</pre></div>
 <p>然而我很快就意识到，我的函数背后是庞大的数据库和更低层的接口。无论是“过滤”还是“打分”，都需要运行在这一堆数据上面。如果只编造参数，我无从手动预测正确结果；如果连背后的数据也模拟一遍，那成本又太大了，因为我很难估计下层接口、下下层接口又要用到什么数据。</p>
-<p>正当我一筹莫展之际，经验丰富的导师给我介绍了"monkey patching"的概念，<a href="github.com/bouk/monkey">并塞给了我一个链接</a>。</p>
+<p>正当我一筹莫展之际，经验丰富的导师给我介绍了"monkey patching"的概念，<a href="https://github.com/bouk/monkey">并塞给了我一个链接</a>。</p>
 <h3>
 <a id="user-content-patching大法好" class="anchor" href="#patching%E5%A4%A7%E6%B3%95%E5%A5%BD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Patching大法好</h3>
 <p>按照我目前的理解，monkey patching就是重新定义一个函数，从而让它返回任何你想要的值。我现在不是预测不了过滤和打分的结果吗？patch一下就可以为所欲为了！如代码所示，我先用<code>monkey.PatchInstanceMethod</code>把一个方法屏蔽为自定义的函数，事后再用<code>monkey.UnpatchAll()</code>解除屏蔽。这样一来，我既免去了编数据的负担，又能专注于函数本身而不用担心底层接口是否可靠。一举两得，岂不美哉？</p>
@@ -1182,7 +1182,7 @@ table.capped-list td.middle{text-align:center}table.capped-list .favicon{width:1
     })
 }</pre></div>
 <p>有人问：“高富帅先生，请问您保养头发的秘诀是什么？为什么21岁了还是如此乌黑浓密呢？”</p>
-<p>高富帅轻轻一笑，从容答道：“因为我用<a href="github.com/smartystreets/goconvey">goconvey</a>。”</p>
+<p>高富帅轻轻一笑，从容答道：“因为我用<a href="https://github.com/smartystreets/goconvey">goconvey</a>。”</p>
 <h2>
 <a id="user-content-震惊800️的github项目居然过不了作者自己写的测试" class="anchor" href="#%E9%9C%87%E6%83%8A800%EF%B8%8F%E7%9A%84github%E9%A1%B9%E7%9B%AE%E5%B1%85%E7%84%B6%E8%BF%87%E4%B8%8D%E4%BA%86%E4%BD%9C%E8%80%85%E8%87%AA%E5%B7%B1%E5%86%99%E7%9A%84%E6%B5%8B%E8%AF%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>震惊！800<g-emoji class="g-emoji" alias="star" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/2b50.png">⭐️</g-emoji>的GitHub项目居然过不了作者自己写的测试！</h2>
 <p>写测试从不怕测出问题，因为写测试就是为了找出问题。</p>
