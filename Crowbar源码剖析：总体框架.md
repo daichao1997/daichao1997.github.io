@@ -2,17 +2,17 @@
 
 ## Introduction
 
-Crowbar是《自制编程语言》一书中作者自己构思的无类型语言。本书一边向读者讲述编程语言的基本要素，一边讲解具体的实现方法，可作为编译技术的入门材料。至于书中另一门叫做Diksam的静态类型语言，等我学完了再来写。
+Crowbar是《自制编程语言》一书中作者自己构思的无类型语言。本书一边向读者讲述编程语言的基本要素，一边讲解具体的实现方法，可作为编译技术的入门材料。此外，书中还有一门叫做Diksam的静态类型语言，等我学完了再来写。不🐦，真的。
 
 ## Layer-0
 
-不管什么语言，本质上就是一个文本解析程序，只不过在解析的同时配上了动作的执行，此所谓词法+语法+语义。若没有特殊要求，制作自己的语言并非难事。要分析词法，我们有Lex；要分析语法，我们有Yacc；于是我们的任务只剩下编写语义了——给你一个解析好的语句，你究竟要做什么事情？
+不管什么语言，本质上就是一个文本解析程序，只不过在解析的同时配上了动作的执行，此所谓词法+语法+语义。如果没有特别要求，制作一套自己的编程语言其实并非难事——要分析词法，我们有Lex；要分析语法，我们有Yacc。唯一需要独立编写的就是__语义__，而这也是最关键的地方。
 
 既然是C程序，那就从main函数看起吧。
 
 ### main()
 
-读取命令行指定的代码文件，然后初始化一个“解释器”，用它编译、执行代码，最后回收解释器。真简单！
+读取代码文件，然后初始化一个“解释器”，用它编译、执行代码，最后回收掉解释器。真简单！
 
 ```c
 fp = fopen(argv[1], "r")
@@ -37,7 +37,7 @@ MEM_dump_blocks(stdout)
 
 ### CRB_create_interpreter()
 
-啥是解释器啊？其实就是个数据结构，存储着程序解析的结果。
+所谓解释器，其实就是一个数据结构，存储着程序的解析结果，并管理着自己的存储空间。它形成了一个封闭的__运行环境__。
 
 ```c
 struct CRB_Interpreter_tag {
@@ -53,25 +53,26 @@ struct CRB_Interpreter_tag {
 };
 ```
 
-- interpreter_storage / execute_storage是用来控制存储空间的（后面说）
+- interpreter_storage / execute_storage是用来管理内存的（后面说）
 
-- variable / function_list / statement_list都是链表，存储解析得来的“东西”（后面说）
+- variable / function_list / statement_list都是链表，存储解析代码得来的“东西”（后面说）
 
-- current_line_number记录当前解析到了源代码的哪一行，方便报错时给出具体位置
+- current_line_number记录当前解析到了源代码的哪一行，方便在报错时给出具体位置
 
-- stack / heap是运行时分配的存储空间，比如给数组用的（后面说）
+- stack / heap是运行时分配的内存，可以给数组用（后面说）
 
-> __不知道top_environment是什么！__
+> __还没读懂top_environment__
 
 ```c
 CRB_Interpreter *CRB_create_interpreter(void)
 {
     MEM_Storage storage;
-    CRB_Interpreter *interpreter;
-
+    CRB_Interpreter *interpreter; // 等同于CRB_Interpreter_tag*
+    // 1
     storage = MEM_open_storage(0);
     interpreter = MEM_storage_malloc(storage, sizeof(struct CRB_Interpreter_tag));
-    interpreter->interpreter_storage = storage;
+    // 2
+    interpreter->interpreter_storage = storage; // 注意
     interpreter->execute_storage = NULL;
     interpreter->variable = NULL;
     interpreter->function_list = NULL;
@@ -79,31 +80,25 @@ CRB_Interpreter *CRB_create_interpreter(void)
     interpreter->current_line_number = 1;
     interpreter->stack.stack_alloc_size = 0;
     interpreter->stack.stack_pointer = 0;
-    interpreter->stack.stack = MEM_malloc(sizeof(CRB_Value) * STACK_ALLOC_SIZE);
+    interpreter->stack.stack = MEM_malloc(sizeof(CRB_Value) * STACK_ALLOC_SIZE); // 注意
     interpreter->heap.current_heap_size = 0;
-    interpreter->heap.current_threshold = HEAP_THRESHOLD_SIZE;
+    interpreter->heap.current_threshold = HEAP_THRESHOLD_SIZE; // 注意
     interpreter->heap.header = NULL;
     interpreter->top_environment = NULL;
-
+    // 3
     crb_set_current_interpreter(interpreter);
+    // 4
     add_native_functions(interpreter);
-
     return interpreter;
 }
 ```
 
 本函数的执行过程如下：
 
-  - `interpreter`是一个`CRB_Interpreter`的指针（`CRB_Interpreter`等同于`CRB_Interpreter_tag`）
-  - 开一片存储空间，为解释器留出位置
-      - `storage = MEM_open_storage(0);`
-      - `interpreter = MEM_storage_malloc(storage, sizeof(struct CRB_Interpreter_tag));`
-- 初始化各种成员变量
-  - `interpreter->interpreter_storage = storage;`
-  - `interpreter->stack.stack = MEM_malloc(sizeof(CRB_Value) * STACK_ALLOC_SIZE);`
-  - 其他成员均为平凡的初始值
-- 设置另一个包的static变量，没什么特殊的：`crb_set_current_interpreter(interpreter)`
-- “注册”原生函数（后面说）：`add_native_functions(interpreter)`
+1. 开一片存储空间，为解释器留出位置
+2. 初始化各种成员变量，大部分都是平凡的初始值
+3. 设置另一个包的static变量，没什么特殊的
+4. “注册”原生函数（后面说）
 
 ### CRB_compile
 
@@ -124,13 +119,13 @@ void CRB_compile(CRB_Interpreter *interpreter, FILE *fp)
 }
 ```
 
-yyparse()是整个函数的主干，它由Lex和Yacc共同生成。简单来说，这个函数逐个字符读取源码，和Lex文件里写的词法规则进行匹配，每匹配一次就触发一些“动作”并可能返回一种“token”，此所谓“词法分析”。每次返回的token经过累积后，又会满足Yacc文件里写的语法规则（移进/归约），于是又会据此做一些“动作”，此所谓“语法分析”。整个文件读完（术语这个过程叫做“one pass”，一趟），代码就解析得差不多了，解释器里的数据结构也会被填满。
+`yyparse()`是整个函数的主干，由Lex和Yacc共同生成。简单来说，这个函数逐个字符读取源码，和Lex文件里的词法规则进行匹配。每匹配一次就触发一些“动作”，并可能返回一种“token”，此所谓__词法分析__。返回的token经过累积后（移进），又会满足Yacc文件里的语法规则（归约），于是又会据此做一些“动作”，此所谓__语法分析__。整个文件读完（术语叫做“one pass”，一趟），代码就解析得差不多了，解释器里的数据结构也会被填满，留待执行。
 
 Lex和Yacc文件的具体内容，留到后面说。
 
 ### CRB_interpret
 
-现在就要遍历解释器里的“东西”，真正地执行代码了。
+现在就要真正地执行代码了。
 
 ```c
 void CRB_interpret(CRB_Interpreter *interpreter)
@@ -145,13 +140,13 @@ void CRB_interpret(CRB_Interpreter *interpreter)
 
 > __第二行，暂时说不清楚__
 
-第三行，执行解释器里的语句链表，它就是在上一步编译的过程中生成的“东西”之一。它只是遍历链表，对每条语句调用`execute_statement`，而后者又根据语句类型，再调用不同的处理函数`execute_X_statement`，其中X可以是expression, global, if, while, for, return, break, continue等具体语句种类。Layer-2将介绍具体的处理过程。
+第三行，执行解释器里的语句链表（由上一步编译生成）。该函数只是遍历链表，对每条语句调用`execute_statement`，而后者又根据语句的具体类型，再调用不同的处理函数`execute_X_statement`，其中X可以是expression, global, if, while, for, return, break, continue等种类名称。Layer-2将介绍具体的处理过程。
 
 第四行，垃圾回收，后面说。
 
 ### CRB_dispose_interpreter
 
-垃圾回收，内存释放等等。在进一步了解Crowbar内存管理机制之前，不好说细。其实我也没有完全搞懂，且写且珍惜。
+垃圾回收，内存释放等等，在进一步了解Crowbar的内存管理机制之前不好说细。__其实我也没有完全搞懂，且写且珍惜。__
 
 ### MEM_dump_blocks
 
@@ -159,7 +154,7 @@ debug用，打印各个内存块的状态，省略了。
 
 ## 后续
 
-刚才我对代码树进行了广度优先遍历，介绍了最简要的框架。接下来我将适当采取深度优先遍历，分几篇文章把每个模块的实现讲透彻，也让自己铭记于心。
+刚才我对Crowbar的代码树进行了BFS，介绍了最简要的框架。接下来我将适当采取DFS，分几篇文章把每个模块的实现讲透彻，也让自己铭记于心。
 
 国庆即将结束，进度依然捉急。工作日到来后，学习时间将大幅缩水，但这系列我绝对不🐦。真的。
 
