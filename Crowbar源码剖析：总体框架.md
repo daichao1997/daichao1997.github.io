@@ -1,8 +1,10 @@
+# Crowbar源码剖析：总体框架
+
 ## Introduction
 
 Crowbar是《自制编程语言》一书中作者自己构思的无类型语言。本书一边向读者讲述编程语言的基本要素，一边讲解具体的实现方法，可作为编译技术的入门材料。至于书中另一门叫做Diksam的静态类型语言，等我学完了再来写。
 
-##Layer-0
+## Layer-0
 
 不管什么语言，本质上就是一个文本解析程序，只不过在解析的同时配上了动作的执行，此所谓词法+语法+语义。若没有特殊要求，制作自己的语言并非难事。要分析词法，我们有Lex；要分析语法，我们有Yacc；于是我们的任务只剩下编写语义了——给你一个解析好的语句，你究竟要做什么事情？
 
@@ -21,7 +23,7 @@ CRB_dispose_interpreter(interpreter)
 MEM_dump_blocks(stdout)
 ```
 
-##Layer-1
+## Layer-1
 
 ### 简介
 
@@ -103,7 +105,7 @@ CRB_Interpreter *CRB_create_interpreter(void)
 - 设置另一个包的static变量，没什么特殊的：`crb_set_current_interpreter(interpreter)`
 - “注册”原生函数（后面说）：`add_native_functions(interpreter)`
 
-###CRB_compile
+### CRB_compile
 
 初步的数据结构有了，开始解析代码：
 
@@ -126,7 +128,7 @@ yyparse()是整个函数的主干，它由Lex和Yacc共同生成。简单来说�
 
 Lex和Yacc文件的具体内容，留到后面说。
 
-###CRB_interpret
+### CRB_interpret
 
 现在就要遍历解释器里的“东西”，真正地执行代码了。
 
