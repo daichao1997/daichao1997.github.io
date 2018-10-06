@@ -1,4 +1,5 @@
 theme: jekyll-theme-slate
+description: 代超的博客
 plugins:
   - jekyll-relative-links
 relative_links:
