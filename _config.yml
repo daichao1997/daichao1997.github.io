@@ -1,7 +1,6 @@
 theme: jekyll-theme-slate
-title: 代超的博客
-description: 没错，这就是代超的博客
-show_downloads: true
+title: Dai Chao
+description: Put your faith in the Light! 📮 fordring866@gmail.com
 plugins:
   - jekyll-relative-links
 relative_links:
