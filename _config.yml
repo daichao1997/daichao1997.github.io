@@ -1,5 +1,7 @@
 theme: jekyll-theme-slate
-description: 代超的博客
+title: 代超的博客
+description: 没错，这就是代超的博客
+show_downloads: true
 plugins:
   - jekyll-relative-links
 relative_links:
