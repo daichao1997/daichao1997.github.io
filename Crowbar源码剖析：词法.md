@@ -8,13 +8,13 @@
 
 ## Layer-2-Lex
 
-这部分讲述Lex如何对五花八门的字符作出不同反应，用`<X>exp{action}`表示“状态X下，与exp匹配时，执行action”。为了给Yacc传递符号的解析结果，于是双方约定了一种“通信方式”：
+这部分讲述Lex如何对五花八门的字符作出不同反应，用`<X>exp{action}`表示“状态X下，与exp匹配时，执行action”。为了给Yacc传递符号的解析结果，双方约定了一种“通信方式”：
 
 - 符号的**字面内容**自动进入了`char *yytext`
 - 符号的**值**需要手动存入`yylval`（在Yacc里定义）
 - 用`return`返回符号的**种类**（在Yacc里定义）
 
-本来不想说Lex/Yacc的，但这种影响代码的规则，还是讲一下比较好。
+本来不想说Lex/Yacc的，但这种影响代码理解的规则，还是讲一下比较好。
 
 ### 保留字与运算符
 
@@ -47,7 +47,7 @@ char *crb_create_identifier(char *str) {
 
 ### 整数、浮点数
 
-整数和浮点数都属于最简单的**表达式**，但任何表达式都要用专门的Expression结构体来存储，这样才能保证语法上的统一。因此我们调用`crb_alloc_expression`生成一个新Expression对象，然后把匹配到的字面值（yytext）记入其中。
+整数和浮点数都属于最简单的**表达式**，但任何表达式都要用专门的Expression结构体来存储，这样才能保证语法上的统一。因此我们调用`crb_alloc_expression`生成一个新Expression对象，然后把匹配到的字面值（yytext）以正确的形式（int/double）记入其中。
 
 ```c
 // 整数
@@ -82,12 +82,14 @@ Expression *crb_alloc_expression(ExpressionType type) {
 
 ### 字符串
 
-识别到单个双引号后，先用`crb_open_string_literal`清空临时存放字符串的buffer，然后从INITIAL状态进入STRING_LITERAL_STATE状态，标志着字符串识别的开始。
+识别到单个双引号后，先用`crb_open_string_literal`清空临时存放字符串的`st_string_literal_buffer`，然后从INITIAL状态进入STRING_LITERAL_STATE状态，标志着字符串识别的开始。
 
-以下代码中的`SSLB`均代表`st_string_literal_buffer`（实在太长了，看不下去）
+`#define SSLB st_string_literal_buffer //实在太长了，看不下去`
+
+`#define \"" \" //Markdown不支持Lex语法，于是我想以C来显示。但如果下面只写一个双引号，后面的内容全都会被视为字符串，从而变成丑陋的红色，所以这里把双引号变成两个。`
 
 ```c
-<INITIAL>\" {
+<INITIAL>\"" {
     crb_open_string_literal();
     BEGIN STRING_LITERAL_STATE;
 }
@@ -96,7 +98,7 @@ void crb_open_string_literal(void) {
 }
 ```
 
-在字符串识别模式下，任何双引号之外的字符都会被简单地加入SSLB，也就是临时存放字符串的buffer。如果是换行符，还会增加一下行数。
+在字符串识别模式下，任何双引号之外的字符都会被简单地加入SSLB。如果是换行符，还会增加一下行数。
 
 `crb_add_string_literal`专门用来将字符加入SSLB，它除了往buffer里塞一个字符，还管理着buffer的大小，毕竟字符串（理论上）是不限长度的。由此可见，如果语言的设计者懒得管理内存，那么用户可以有很多种方法把系统整崩溃。
 
@@ -105,7 +107,7 @@ void crb_open_string_literal(void) {
     crb_add_string_literal('\n');
     increment_line_number();
 }
-<STRING_LITERAL_STATE>\\\"     crb_add_string_literal('"');
+<STRING_LITERAL_STATE>\\\""     crb_add_string_literal('"');
 <STRING_LITERAL_STATE>\\n       crb_add_string_literal('\n');
 <STRING_LITERAL_STATE>\\t       crb_add_string_literal('\t');
 <STRING_LITERAL_STATE>\\\\      crb_add_string_literal('\\');
@@ -124,7 +126,7 @@ void crb_add_string_literal(int letter) {
 另一个双引号标志着字符串的结束，按表达式处理即可，如同整数、浮点数那样。`crb_close_string_literal`只是把buffer的内容复制到新字符串里罢了。
 
 ```c
-<STRING_LITERAL_STATE>\" {
+<STRING_LITERAL_STATE>\"" {
     Expression *expression = crb_alloc_expression(STRING_EXPRESSION);
     expression->u.string_value = crb_close_string_literal();
     yylval.expression = expression;
