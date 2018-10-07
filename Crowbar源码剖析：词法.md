@@ -1,4 +1,4 @@
-# Crowbar源码剖析：词法和语法
+# Crowbar源码剖析：词法
 
 ## Introduction
 
