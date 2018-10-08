@@ -6,7 +6,7 @@
 
 本篇文章会集中讨论**匹配**触发了**哪些动作**，而不讲如何匹配、为什么匹配。
 
-## Layer-2-Lex
+## Crowbar-Lex
 
 这部分讲述Lex如何对五花八门的字符作出不同反应，用`<X>exp{action}`表示“状态X下，与exp匹配时，执行action”。为了给Yacc传递符号的解析结果，双方约定了一种“通信方式”：
 
@@ -16,7 +16,7 @@
 
 本来不想说Lex/Yacc的，但这种影响代码理解的规则，还是讲一下比较好。
 
-### 保留字与运算符
+### Crowbar-Lex-保留字与运算符
 
 匹配到保留字/运算符后，直接返回对应的token。
 
@@ -27,7 +27,7 @@
 // and more
 ```
 
-### 标识符
+### Crowbar-Lex-标识符
 
 匹配到标识符后，调用`crb_create_identifier`，把标识符装进一个新字符串。真简单！
 
@@ -45,7 +45,7 @@ char *crb_create_identifier(char *str) {
 }
 ```
 
-### 整数、浮点数
+### Crowbar-Lex-整数、浮点数
 
 整数和浮点数都属于最简单的**表达式**，但任何表达式都要用专门的Expression结构体来存储，这样才能保证语法上的统一。因此我们调用`crb_alloc_expression`生成一个新Expression对象，然后把匹配到的字面值（yytext）以正确的形式（int/double）记入其中。
 
@@ -80,7 +80,7 @@ Expression *crb_alloc_expression(ExpressionType type) {
 }
 ```
 
-### 字符串
+### Crowbar-Lex-字符串
 
 识别到单个双引号后，先用`crb_open_string_literal`清空临时存放字符串的`st_string_literal_buffer`，然后从INITIAL状态进入STRING_LITERAL_STATE状态，标志着字符串识别的开始。
 
@@ -142,7 +142,7 @@ char *crb_close_string_literal(void) {
 }
 ```
 
-### 其他字符
+### Crowbar-Lex-其他字符
 
 - INITIAL状态下遇到\#会进入COMMENT状态，再遇到换行符才回到INITIAL，其他字符都无动作
 - 换行符：行数加一
@@ -160,86 +160,3 @@ Lex将文本提取为一串抽象的符号。符号的**种类**供Yacc进行语
 说到离家回校，又有一堆感慨，但鉴于这篇是“技术”文章，我还是忍住吧。
 
 GTMD实习！
-
-<!--
-
-## Layer-2-Yacc
-
-如前所述，这里不说如何归约，只说归约后做什么。
-
-### 语句块（block）
-
-调用`crb_create_block`，生成一个Block结构体，填入块中的语句链表。
-
-```c
-Block *crb_create_block(StatementList *statement_list) {
-    Block *block = crb_malloc(sizeof(Block));
-    block->statement_list = statement_list;
-    return block;
-}
-
-typedef struct {
-    StatementList       *statement_list;
-} Block;
-
-typedef struct StatementList_tag {
-    Statement   *statement;
-    struct StatementList_tag    *next;
-} StatementList;
-```
-
-### 语句链表（statement_list）
-
-将语句加入已有的语句链表，没有就生成新的。
-
-```c
-StatementList *crb_chain_statement_list(StatementList *list, Statement *statement) {
-    StatementList *pos;
-    if (list == NULL) {
-        return crb_create_statement_list(statement);
-    }
-    for (pos = list; pos->next; pos = pos->next); // 到链表尾部
-    pos->next = crb_create_statement_list(statement); // 插入新元素
-    return list;
-}
-
-StatementList *crb_create_statement_list(Statement *statement) {
-    StatementList *sl = crb_malloc(sizeof(StatementList));
-    sl->statement = statement;
-    sl->next = NULL;
-    return sl;
-}
-```
-
-### 语句（statement）
-
-如果是global/if/while/for/return/break/continue等语句，什么也不做。如果是表达式+分号，调用`crb_create_expression_statement`。
-
-```c
-Statement *crb_create_expression_statement(Expression *expression) {
-    Statement *st = alloc_statement(EXPRESSION_STATEMENT);
-    st->u.expression_s = expression;
-    return st;
-}
-
-static Statement *alloc_statement(StatementType type) {
-    Statement *st = crb_malloc(sizeof(Statement));
-    st->type = type;
-    st->line_number = crb_get_current_interpreter()->current_line_number;
-    return st;
-}
-
-struct Statement_tag {
-    StatementType       type;
-    int                 line_number;
-    union {
-        Expression      *expression_s;
-        GlobalStatement global_s;
-        IfStatement     if_s;
-        WhileStatement  while_s;
-        ForStatement    for_s;
-        ReturnStatement return_s;
-    } u;
-};
-```
--->

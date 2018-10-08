@@ -4,26 +4,38 @@
 
 Crowbar是《自制编程语言》一书中作者自己构思的无类型语言。本书一边向读者讲述编程语言的基本要素，一边讲解具体的实现方法，可作为编译技术的入门材料。此外，书中还有一门叫做Diksam的静态类型语言，等我学完了再来写。不🐦，真的。
 
-## Layer-0
+## Crowbar
 
 不管什么语言，本质上就是一个文本解析程序，只不过在解析的同时配上了动作的执行，此所谓词法+语法+语义。如果没有特别要求，制作一套自己的编程语言其实并非难事——要分析词法，我们有Lex；要分析语法，我们有Yacc。唯一需要独立编写的就是**语义**，而这也是最关键的地方。
 
-既然是C程序，那就从main函数看起吧。
-
-### main()
-
-读取代码文件，然后初始化一个“解释器”，用它编译、执行代码，最后回收掉解释器。真简单！
+既然是C程序，那就从main函数看起吧。读取代码文件，然后初始化一个“解释器”，用它编译、执行代码，最后回收掉解释器。真简单！
 
 ```c
-fp = fopen(argv[1], "r")
-interpreter = CRB_create_interpreter()
-CRB_compile(interpreter, fp)
-CRB_interpret(interpreter)
-CRB_dispose_interpreter(interpreter)
-MEM_dump_blocks(stdout)
+int main(int argc, char **argv) {
+    CRB_Interpreter *interpreter;
+    FILE *fp;
+
+    if (argc != 2) {
+        fprintf(stderr, "usage:%s filename", argv[0]);
+        exit(1);
+    }
+
+    fp = fopen(argv[1], "r");
+    if (fp == NULL) {
+        fprintf(stderr, "%s not found.\n", argv[1]);
+        exit(1);
+    }
+
+    interpreter = CRB_create_interpreter();
+    CRB_compile(interpreter, fp);
+    CRB_interpret(interpreter);
+    CRB_dispose_interpreter(interpreter);
+    MEM_dump_blocks(stdout);
+    return 0;
+}
 ```
 
-## Layer-1
+## Crowbar-main
 
 ### 简介
 
@@ -35,7 +47,7 @@ MEM_dump_blocks(stdout)
 - CRB_dispose_interpreter：清除内存等收尾工作
 - MEM_dump_blocks：debug用
 
-### CRB_create_interpreter()
+### Crowbar-main-CRB_create_interpreter
 
 所谓解释器，其实就是一个数据结构，存储着程序的解析结果，并管理着自己的存储空间。它形成了一个封闭的**运行环境**。
 
@@ -64,8 +76,7 @@ struct CRB_Interpreter_tag {
 > **还没读懂top_environment**
 
 ```c
-CRB_Interpreter *CRB_create_interpreter(void)
-{
+CRB_Interpreter *CRB_create_interpreter(void) {
     MEM_Storage storage;
     CRB_Interpreter *interpreter; // 等同于CRB_Interpreter_tag*
     // 1
@@ -100,13 +111,12 @@ CRB_Interpreter *CRB_create_interpreter(void)
 3. 设置另一个包的static变量，没什么特殊的
 4. “注册”原生函数（后面说）
 
-### CRB_compile
+### Crowbar-main-CRB_compile
 
 初步的数据结构有了，开始解析代码：
 
 ```c
-void CRB_compile(CRB_Interpreter *interpreter, FILE *fp)
-{
+void CRB_compile(CRB_Interpreter *interpreter, FILE *fp) {
     extern int yyparse(void);
     extern FILE *yyin;
     crb_set_current_interpreter(interpreter);
@@ -123,7 +133,7 @@ void CRB_compile(CRB_Interpreter *interpreter, FILE *fp)
 
 Lex和Yacc文件的具体内容，留到后面说。
 
-### CRB_interpret
+### Crowbar-main-CRB_interpret
 
 现在就要真正地执行代码了。
 
@@ -144,11 +154,11 @@ void CRB_interpret(CRB_Interpreter *interpreter)
 
 第四行，垃圾回收，后面说。
 
-### CRB_dispose_interpreter
+### Crowbar-main-CRB_dispose_interpreter
 
 垃圾回收，内存释放等等，在进一步了解Crowbar的内存管理机制之前不好说细。**其实我也没有完全搞懂，且写且珍惜。**
 
-### MEM_dump_blocks
+### Crowbar-main-MEM_dump_blocks
 
 debug用，打印各个内存块的状态，省略了。
 
