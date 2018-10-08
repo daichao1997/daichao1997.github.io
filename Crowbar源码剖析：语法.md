@@ -430,7 +430,7 @@ primary_expression
 
 ### Crowbar-Yacc-postfix_expression
 
-`postfix_expression`，我理解为“试着做后缀运算的表达式”。说“试着做”是因为该表达式可能不含后缀运算，但如果有，则一定比其他运算更优先。
+下一级是`postfix_expression`，我理解为“试着做后缀运算的表达式”。说“试着做”是因为该表达式可能不含后缀运算，但如果有，则一定比其他运算更优先。
 
 ```c
 postfix_expression
@@ -460,7 +460,7 @@ postfix_expression
 
 ### Crowbar-Yacc-XX_expression
 
-这一大堆语法从下往上看，就能发现不过是分别尝试了：
+剩下的这一大堆语法从上往下看，就能发现不过是分别尝试了：
 - 单目运算（取负）
 - 乘法、除法、取模
 - 加法、减法
