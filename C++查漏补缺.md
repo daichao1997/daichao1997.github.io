@@ -75,6 +75,11 @@ int main(void) { //现学现卖
 ### 规则
 
 1. 必须定义在public部分
+
+PS: 假设基类b的某虚函数v为public，但派生类d用来覆盖v的函数为private。由于访问权限是在编译时决定的，因此，我可以在外部函数用类型为b\*、指向d对象的指针访问v，但将该指针的类型改为d\*则不能访问v。
+
+这...
+
 2. 不能是static函数
 3. 不能是友元函数
 4. 基类和派生类中的原型相同（这样才能覆盖）
@@ -122,9 +127,11 @@ inline同时也具有如下缺点：
   - 对于一些嵌入式系统，空间更重要
   - 可能造成颠簸（thrashing，如果你还记得是什么的话）
 3. 降低指令缓存的命中率（还记得指令缓存是什么吗）
-4. 加入A模块调用了B模块的inline函数，那么只要该函数改动了，A模块也必须和B模块一起重新编译
+4. 假如A模块调用了B模块的inline函数，那么只要该函数改动了，A模块也必须和B模块一起重新编译
 
-定义在结构体内部的函数自带inline属性（虽然不知道为啥）
+定义在结构体内部的函数自带inline属性（这一点我也不太能理解，请参考[这篇文章](https://www.geeksforgeeks.org/inline-functions-cpp/)）
+
+> It is also possible to define the `inline` function inside the class. In fact, all the functions defined inside the class are implicitly `inline`. Thus, all the restrictions of `inline` functions are also applied here. If you need to explicitly declare `inline` function in the class then just declare the function inside the class and define it outside the class using `inline` keyword.
 
 ## 友元函数/友元类
 
@@ -146,7 +153,7 @@ istream& operator>>(istream& is, T& obj) {
 	return is;
 }
 ```
-4. 如果用户自定义的类重载了`()`运算符，它就会成为一个**函数对象(function object/functor)**
+4. 如果用户自定义的类重载了`()`运算符，它就会成为一个**函数对象(function object/functor)**，此处略
 5. 自增自减运算符`++ --`的重载，注意参数和返回类型的区别
 ```cpp
 struct X {
@@ -158,25 +165,25 @@ struct X {
 	}
 	// X++
 	X operator++(int) {
-		X tmp(*this); // copy
-		operator++(); // a++
-		return tmp;   // return old value
+		X tmp(*this);
+		operator++(); // 真正的递增
+		return tmp;   // 返回的是旧值
 	}
 };
 ```
-6. 赋值运算符`=`可以用来实现deep copy，当类成员有指针的时候比较有用。**Copy Constructor**也是一样（见下）
+6. 重载赋值运算符`=`可以实现deep copy，当类成员有指针的时候比较有用。**Copy Constructor**也是一样（见下）
 
 ## 构造函数
 
-### 默认构造函数(Default Constructor)
+### 默认构造函数 (Default Constructor)
 
 没有参数（有默认值的参数也算参数）的构造函数，就是默认构造函数。如果用户不定义它，编译器会自动生成一个。
 
-### 拷贝构造函数(Copy Constructor)
+### 拷贝构造函数 (Copy Constructor)
 
 1. 调用时机：对象作为函数参数、函数返回值、被赋的值时
 2. 设成private会禁止拷贝该类对象
-3. 参数**必须**是引用，否则会陷入“为了拷贝，必先拷贝”的循环
+3. 参数**必须**是引用，否则会陷入“拷贝之前先拷贝”的循环
 4. 参数**应该**是const，[原因](https://www.geeksforgeeks.org/copy-constructor-argument-const/)
 
 ### 调用顺序
@@ -195,6 +202,17 @@ D(...) : B(...) {
 
 1. `static`的成员函数没有`this`指针
 2. `static`的成员函数不能是`virtual`的
+
+[凡事都要问个为什么。](https://stackoverflow.com/questions/9863007/can-we-have-a-static-virtual-functions-if-not-then-why)大部分答案的逻辑是这样的：
+
+> 1. 使用虚函数，是为了根据指针所指对象在运行时的具体类型，调用不同的成员函数
+> 2. 静态成员函数不属于具体的对象，而是属于整个类
+> 3. 所以，静态虚函数"make no sense"
+
+我认为这个答案才叫"make no sense"。既然只用判断类型，而static的特点就是只和类型相关，为什么不让我在运行时调用静态虚函数呢？
+
+其他答案也没有说明静态虚函数与C++目前的某些机制相矛盾，于是只能认为，“没这个必要”。
+
 3. `static`的成员函数不能是`const`和/或`volatile`的
 
 ## 虚继承
@@ -202,3 +220,9 @@ D(...) : B(...) {
 定义不难，理解为什么需要虚继承也不难，但还有一个问题——[虚继承一定是最好的吗？](https://stackoverflow.com/questions/21558/in-c-what-is-a-virtual-base-class/21607#21607)
 
 答案太绕了，脑壳疼，略。
+
+## const成员函数
+
+- 不允许修改调用对象的成员
+- const对象不能调用non-const成员函数，其他三种情况都可以（按对象和成员函数是否为const来划分），毕竟non-const成员函数可能会修改const对象，与其修改时报错，不如编译时报错
+- const成员函数不能是static的，因为static的成员函数不具有this指针，而const成员函数是根据this指针来保护调用者不被写的
