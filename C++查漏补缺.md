@@ -74,15 +74,27 @@ int main(void) { //现学现卖
 
 ### 规则
 
-1. 必须定义在public部分
+- 必须定义在public部分
 
-PS: 假设基类b的某虚函数v为public，但派生类d用来覆盖v的函数为private。由于访问权限是在编译时决定的，因此，我可以在外部函数用类型为b\*、指向d对象的指针访问v，但将该指针的类型改为d\*则不能访问v。
+PS: 假设基类B的某虚函数v为public，但派生类D用来覆盖v的函数为private。由于访问权限是在编译时决定的，因此，我可以在外部函数用类型为B\*、指向D对象的指针访问v，但若将该指针的类型改为D\*，则不能访问v。
 
 这...
 
-2. 不能是static函数
-3. 不能是友元函数
-4. 基类和派生类中的原型相同（这样才能覆盖）
+```cpp
+class B {public: virtual v{};};
+class D : B {private: v{};};
+int main {
+	D d; B *bptr; D *dptr;
+	bptr = &d; dptr = &d;
+	bptr->v(); // OK, it's public
+	dptr->v(); // No, it's private
+	// WTF???
+}
+```
+
+- 不能是static函数
+- 不能是友元函数
+- 基类和派生类中的原型相同（这样才能覆盖）
 
 ### 工作原理
 
