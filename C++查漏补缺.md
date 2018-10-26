@@ -32,7 +32,7 @@
 4. `sizeof(1==1)`的C值为4，C++值为1，因为C++支持bool类型
 5. 空结构体的sizeof值在C是0，在C++是1
 
-## What are the differences between references and pointers?
+## 引用和指针的区别
 
 总地来说，引用不如指针灵活，但更安全。引用值必须
 
@@ -42,7 +42,7 @@
 
 这些限制避免了野指针的存在，但也导致开发者无法使用引用来编写链表等数据结构。Java的引用没有上面这些限制，因此Java可以直接抛弃指针的说法。
 
-## `delete this`会发生什么？
+## "delete this"会发生什么？
 
 首先，只有new出来的对象才能被delete，否则会产生undefined behavior；其次，这句话只能在非静态成员函数中使用，否则会产生编译错误；最后，正常地`delete this`之后，函数内将无法获取自己的成员变量。
 
@@ -72,7 +72,7 @@ int main(void) { //现学现卖
 }
 ```
 
-### Rules
+### 规则
 
 1. 必须定义在public部分
 2. 不能是static函数
@@ -99,11 +99,10 @@ int main(void) { //现学现卖
 - 抽象类没有对象，但可以有指针，也可以有构造函数
 - 抽象类的派生类还是抽象类，除非它实现了所有纯虚函数
 
-## overload/override/overwrite/hiding
+## overload/override/hiding
 
 - overload: 相同的函数名，不同的原型，称为**重载**___（不是过载，炉宗注意了）___
 - override: 相同的函数名，相同的原型，用于**覆盖**父类虚函数
-- overwrite: 你可以用某个值**覆写**某个变量
 - hiding: 在内层作用域中定义和外层同名的变量，外层的变量就被**隐藏**了
 
 ## inline
