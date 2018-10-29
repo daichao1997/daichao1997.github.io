@@ -1,3 +1,5 @@
+[[2018-10-29] The KMP Algorithm](https://daichao1997.github.io/KMP.html)
+
 [[2018-10-26] C++查漏补缺](https://daichao1997.github.io/C++查漏补缺.html)
 
 [[2018-10-08] Crowbar源码剖析：语法](https://daichao1997.github.io/Crowbar源码剖析：语法.html)
