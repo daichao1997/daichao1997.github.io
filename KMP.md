@@ -91,9 +91,7 @@ int main() {
 		pf = prefix_func(s);
 		for(int i = pattern.size()+1; i < s.size(); i++) {
 			if(pf[i] == pattern.size()) {
-				cout << ".";
-			} else {
-				cout << " ";
+				cout << i - 2 * pattern.size() << " ";
 			}
 		}
 		cout << endl;
