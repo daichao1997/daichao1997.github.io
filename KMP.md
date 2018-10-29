@@ -23,8 +23,8 @@ Not difficult to understand. I learned it from [Coursera](https://www.coursera.o
 1. `L[0] = 0`
 2. `L[i+1] = len + 1`, where `len` is the length of the longest border of `s[:i]` that satisfies `s[len] = s[i]`
   - To find `len`, try every border of `s[:i]` from the longest to the shortest
-    - To find the next longest border, see **Conclusion 2**
-  - If no border is found, simply compare `s[0]` with `s[i]`.
+  - To find the next longest border, see **Conclusion 2**
+  - If no border is found, simply compare `s[0]` with `s[i]`
     - If `s[0] = s[i]`, then `L[i+1] = 1`
     - Else, `L[i+1] = 0`
 
