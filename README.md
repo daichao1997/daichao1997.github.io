@@ -1,3 +1,5 @@
+[[2018-11-02] LCP数组、后缀自动机、后缀树（？）](https://daichao1997.github.io/LCP数组、后缀自动机.html)
+
 [[2018-10-29] 破解外星代码：详解后缀数组模板](https://daichao1997.github.io/后缀数组.html)
 
 [[2018-10-29] The KMP Algorithm](https://daichao1997.github.io/KMP.html)
