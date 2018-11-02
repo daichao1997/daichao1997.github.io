@@ -38,7 +38,7 @@
 
 也就是说，sa[rank[i]]就是i，rank[0]就是"0"在sa中的下标。
 
-然后，取assassin，再取刚好比它大的后缀assin，直接比较，得到LCP为"ass"，height值为3。
+然后，取assassin，再取刚好比它大的后缀assin，直接比较得到**ass**，height值为3。
 
 观察两者下家，可以肯定ssassin一定比ssin小。
 
