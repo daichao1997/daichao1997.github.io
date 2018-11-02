@@ -80,7 +80,7 @@ void height(int *r, int *sa, int n) {
 
 Suffix Automaton, SAM.
 
-这个东西我昨天看了一晚上，确实很强大，但也很抽象。鉴于自己没有理解透彻，就只粘贴一下这篇[比较完美的教程](https://cp-algorithms.com/string/suffix-automaton.html)的构造算法（需要知道自动机是什么）。下面说一下文章梗概。
+这个东西我昨天看了一晚上，确实很强大，但也很抽象。鉴于自己没有理解透彻，就只粘贴一下这篇[比较完美的教程](https://cp-algorithms.com/string/suffix-automaton.html)（需要知道自动机是什么）。下面说一下文章梗概。
 
 ### （试着讲讲）关键概念
 
@@ -120,7 +120,9 @@ Now the whole task boils down to implementing the process of adding one characte
 
 - If `len(p) + 1 = len(q)`, assign `link(cur) = q` and leave.
 
-> 如果旧串含c，那就麻烦了，因为新子串可能与旧子串重复，无法立即推断endpos了。我不懂该怎么解释这种情况下算法的行为了。
+> 如果旧串含c，那就麻烦了，因为新子串可能与旧子串重复，无法立即推断endpos了。
+
+> 我不懂该怎么解释这种情况下算法的行为，但我猜关键在于后缀链的某些特性。
 
 - Otherwise we clone `q`: create a new state `clone`, copy all the data from `q` (suffix link and transition) except `len`. Assign `len(clone) = len(p) + 1`. Direct suffix links from `cur` and `q` to `clone`. Walk through suffix links from `p`. While there is a transition through `c` to `q`, redirect it to `clone`.
 
