@@ -31,22 +31,15 @@ Not difficult to understand. I learned it from [Coursera](https://www.coursera.o
 ### Implementation
 
 ```cpp
-int *prefix_func(string s) {
-	int len = s.size();
-	int *pf = new int[len];
-	int border = 0;
-	pf[0] = 0;
-
-	for(int i = 1; i < len; i++) {
-		while(border > 0 && s[i] != s[border]) {
-			border = pf[border - 1];
-		}
-		if(s[i] == s[border]) {
-			border++;
-		}
-		pf[i] = border;
+int *pf(string s) {
+	int len=s.size(),b=0;
+	int *p=new int[len]; p[0]=0;
+	for(int i=1;i<len;i++) {
+		while(b>0 && s[i]!=s[b]) b=p[b-1];
+		if(s[i]==s[b]) b++;
+		p[i] = b;
 	}
-	return pf;
+	return p;
 }
 ```
 

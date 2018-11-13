@@ -1,3 +1,7 @@
+这里是我的[UVa题解]()，愿能积少成多。
+
+[[2018-11-13] 简单的字符串练习1](https://daichao1997.github.io/简单的字符串练习1.html)
+
 [[2018-11-02] 学习一下大佬的高级优化技巧](https://daichao1997.github.io/学习一下大佬的高级优化技巧.html)
 
 [[2018-11-02] LCP数组、后缀自动机、后缀树（？）](https://daichao1997.github.io/LCP数组、后缀自动机.html)
