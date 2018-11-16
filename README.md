@@ -1,4 +1,4 @@
-[cvfx](https://github.com/daichao1997/daichao1997.github.io/tree/master/cvfx)
+[Image Basics](https://daichao1997.github.io/image_basics.html)
 
 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。
 
