@@ -1,8 +1,4 @@
-[Image Basics](https://daichao1997.github.io/image_basics.html)
-
 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。
-
-谢谢你在我断更的时候还来访问，这是我尚未发表到公众号的的[年记草稿](https://daichao1997.github.io/2019.html)，提前祝你新年快乐。
 
 [[2018-11-13] 简单的字符串练习1](https://daichao1997.github.io/简单的字符串练习1.html)
 
