@@ -1,5 +1,3 @@
-[神秘通道](https://daichao1997.github.io/最后的寒假.html)
-
 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。
 
 [[2018-11-13] 简单的字符串练习1](https://daichao1997.github.io/2018-11-13-简单的字符串练习1.html)
