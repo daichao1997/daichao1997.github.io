@@ -1,6 +1,6 @@
 # 小作文
 
-![](https://daichao1997.github.io/pic/night.png)
+![](https://daichao1997.github.io/pic/night.jpg)
 
 **为期一年的排练就要告一段落了，在这一年里，有欢笑，有泪水，更有无数珍贵的回忆。请以"我与汉密尔顿"为题，写一篇不少于800字的文章，文体不限（诗歌、戏剧除外）。**
 
