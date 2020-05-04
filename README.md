@@ -1,5 +1,7 @@
 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。
 
+[[2020-05-05] 跟着OSDev网站搭建个人操作系统（一）](https://daichao1997.github.io/2020-05-05-osdev-barebone.html)
+
 [[2018-11-13] 简单的字符串练习1](https://daichao1997.github.io/2018-11-13-简单的字符串练习1.html)
 
 [[2018-11-02] 学习一下大佬的高级优化技巧](https://daichao1997.github.io/2018-11-02-学习一下大佬的高级优化技巧.html)
