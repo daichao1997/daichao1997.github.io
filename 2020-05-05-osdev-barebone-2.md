@@ -8,11 +8,11 @@
 
 ### [Booting the Operating System](https://wiki.osdev.org/Bare_Bones#Booting_the_Operating_System)
 
-当你编译好一个内核后，它是存储于磁盘上的，然而一个没有内核的机器该如何把磁盘上的内核读进内存，从而去运行里面的指令呢？这就要用到一个内核之外的东西，叫做**bootloader**。原文提到了GNU有一个叫做[GRUB](https://wiki.osdev.org/GRUB)的现成工具直接用。
+当你编译好一个内核后，它是存储于磁盘上的，然而一个没有内核的机器该如何把磁盘上的内核读进内存，从而去运行里面的指令呢？这就要用到一个内核之外的东西，叫做**bootloader**。原文提到了GNU有一个叫做[GRUB](https://wiki.osdev.org/GRUB)的现成工具可以直接用。
 
-那么为什么推荐用GRUB，而不是自己写一个呢？说好的“自己动手”呢？这里就要提到由GNU提出的[操作系统多重引导规范（Multiboot Specification）](https://www.gnu.org/software/grub/manual/multiboot/multiboot.html)。此规范针对的是这样一个问题——操作系统有茫茫多，平台架构也有不少，而bootloader是同时取决于这两者的，因为它既要初始化平台环境，又要装载内核。假如大家随意发挥，那么当我在PC上运行其他内核时，就可能出现冲突，因为其他内核的bootloader不一定支持PC。因此，Multiboot Specification同时对bootloader和内核作了约束，使符合规范的bootloader能装载任何符合规范的内核。GRUB就是这样的bootloader，而且它还具备其他特性，例如可配置等。
+那么为什么推荐用GRUB，而不是自己写一个bootloader呢？说好的“自己动手”呢？这就要提到GNU的[操作系统多重引导规范（Multiboot Specification）](https://www.gnu.org/software/grub/manual/multiboot/multiboot.html)。此规范针对的是这样一个问题——操作系统有茫茫多，平台架构也有不少，而bootloader是同时取决于这两者的，因为它既要初始化平台环境，又要装载内核。假如大家随意发挥，那么当我在一台PC上运行其他内核时就有可能出现冲突，因为其他内核的bootloader不一定支持该PC。因此，Multiboot Specification同时对bootloader和内核作了约束，保证符合规范的bootloader能装载任何符合规范的内核。GRUB就是这样的bootloader，而且它还具备其他特性，例如可配置等。
 
-可能有人会问：bootloader又是怎么被读进内存的呢？实际上bootloader并不需要其他程序去读取，因为它存在于一个特殊的固件里，叫做[BIOS (Basic Input/Output System)](https://en.wikipedia.org/wiki/BIOS)。电脑一通上电，最先做的事情之一就是去执行BIOS里的指令，这是出厂时就预设好的。
+可能有人会问：bootloader又是怎么被读进内存的呢？实际上bootloader并不需要其他程序去读取，因为它存在于一个特殊的固件里，叫做[BIOS (Basic Input/Output System)](https://en.wikipedia.org/wiki/BIOS)。电脑一通上电，最先做的事情之一就是去执行BIOS里的指令，这是出厂时就预设好的。当然，现在BIOS快被淘汰了，取而代之的是[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)。
 
 #### [Installing GRUB 2 on OS X](https://wiki.osdev.org/GRUB#Installing_GRUB_2_on_OS_X)
 
@@ -118,7 +118,7 @@ This is useful when debugging or when you implement call tracing.
 
 #### 独立环境和宿主环境
 
-我们平时在用户空间写C/C++程序时，都处于“宿主环境”下，其重要特征之一就是C标准库的可用性。然而现在我们处于一个“独立环境”，只有一个交叉编译器，因此我们只能在程序里include非常非常基础的头文件，例如编译器自带的`<stdbool.h>`（定义了布尔类型）、 `<stddef.h>`（定义了`size_t`和`NULL`）、 `<stdint.h>`（定义了定长的数据类型`intx_t`和`uintx_t` ，这对操作系统编程非常重要。万一哪天`short`的长度就变了呢？）。此外还有 <float.h>、<iso646.h>、<limits.h>、<stdarg.h>等头文件。
+我们平时在用户空间写C/C++程序时，都处于“宿主环境”下，其重要特征之一就是C标准库的可用性。然而现在我们处于一个“独立环境”，只有一个交叉编译器，因此我们只能在程序里include非常非常基础的头文件，例如编译器自带的`<stdbool.h>`（定义了布尔类型）、 `<stddef.h>`（定义了`size_t`和`NULL`）、 `<stdint.h>`（定义了定长的数据类型`intx_t`和`uintx_t` ，这对操作系统编程非常重要——万一哪天`short`的长度就变了呢？）。此外还有 `<float.h>`、`<iso646.h>`、`<limits.h>`、`<stdarg.h>`等头文件。
 
 下面的kernel.c非常self-explanatory，我就不多解释了，大意就是。注意缺少C标准库是一件多么麻烦的事情，我们得自己实现`strlen`函数。还有，很多新机器已经不支持VGA文字模式（以及BIOS）了，而是转向了[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)，而在后者的情况下你甚至需要自己设计每个字符的像素buffer。
 
@@ -233,7 +233,7 @@ void kernel_main(void) {
 
 ### [Linking_the_Kernel](https://wiki.osdev.org/Bare_Bones#Linking_the_Kernel)
 
-在用户空间下编程时，GCC可以用自带的脚本自动链接多个object文件，但是系统编程时不要这么做。我们要写一个自己的链接脚本linker.ld。你可能需要先了解一下程序链接的知识，例如程序段、链接地址、加载地址的概念。还可以参考[ld的文档](http://www.scoberlin.de/content/media/http/informatik/gcc_docs/ld_toc.html#TOC5)来学习编写链接脚本：
+在用户空间下编程时，GCC可以用自带的脚本自动链接多个object文件，但是系统编程时不要这么做。我们要写一个自己的链接脚本linker.ld。你可能需要先了解一下程序链接的知识，例如程序段、链接地址、加载地址的概念，还可以参考[ld的文档](http://www.scoberlin.de/content/media/http/informatik/gcc_docs/ld_toc.html#TOC5)来学习编写链接脚本：
 
 ```c
 /* bootloader会从_start处进入内核 */
@@ -298,7 +298,7 @@ menuentry "myos" {
 }
 ```
 
-- 把myos.bin通过`grub-mkrescue`打包成GRUB能直接用的CD-ROM镜像文件myos.iso
+- 通过`grub-mkrescue`把myos.bin打包成GRUB能直接用的CD-ROM镜像文件myos.iso
 
 ```bash
 mkdir -p isodir/boot/grub
