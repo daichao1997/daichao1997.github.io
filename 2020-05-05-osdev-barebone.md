@@ -1,4 +1,4 @@
-## OSDev一日游
+## 跟着OSDev网站搭建个人操作系统（一）
 
 发现一个宝藏网站：osdev.org（我没火星吧），这是我见过的内容最丰富最全面的操作系统开发者社区，里面的wiki不仅教你从零开始搭建内核与操作系统，还传授了一些人生经验，给刚准备起航的newbie指路（或是劝退），可以说是OS新手开发者的福地了。我今天也没干什么，就按照它给的教程一步步走，在QEMU上跑通了一个空空如也的内核，然后准备把大致的步骤记录在这里。当然，我现在是个纯newbie，最多只能做个概括+翻译而已。如果你有兴趣，可以直接去读原文，我会把每篇文章的链接附上。
 
@@ -17,7 +17,7 @@
 
 ### [Required Knowledge](https://wiki.osdev.org/Required_Knowledge)
 
-这里列举了开发OS所需的各种技能，并强调说千万别以为自己随随便便就能完成这项任务。（当然，我自己就不具备里面的很多技能，但我还是proceed了）
+这里列举了开发OS所需的各种技能，并强调说千万别以为自己随随便便就能完成这项任务。（当然，我自己就不具备里面的很多技能）
 
 ### [Beginner Mistakes](https://wiki.osdev.org/Beginner_Mistakes)
 
@@ -29,11 +29,11 @@
 
 > ### 一个不太好接受的事实
 >
-> 如果你不是掌握多种语言、熟悉多种环境和拥有多年开发经验的老鸟，那你根本不用去想着开发一个操作系统。光是要理解这个话题并上手，你就得先修炼十年，而且还得是底层汇编与系统语言（例如C语言）兼修。
+> 如果你不是掌握多种语言、熟悉多种环境和拥有多年开发经验的老鸟，那你根本不用想着去开发一个操作系统。光是要理解这个话题并上手，你就得先修炼十年，而且还得是底层汇编与系统语言（例如C语言）兼修。
 
 > Oh, and for the record, Linus Torvalds wasn't quite one of them--he was a graduate student when he wrote the Linux kernel and had been coding in C for years. While he was well short of that ten year mark, as a grad student who had turned his hobby into his master's thesis, he had more time on his hands to work on the project than most people would. In any case, the 'Linux 0.0.1' release he famously posted to USENET in 1991 was little more than a round-robin scheduler, nowhere close to a full system. Getting to that point took him a year. Get the picture?
 
-> 哦还有，据记载，Linus Torvalds（Linux之父）并不是其中之一（指前文凭一己之力开发了整个操作系统的人物）。他写Linux内核的时候已经是研究生了，写了好几年的C语言。虽然不到十年，但是他把这个业余爱好写成了毕业论文，因此他有比大部分人更充足的时间花在这上面。无论如何，他1991年发布在USENET上的著名的Linux 0.0.1不过是在round-robin调度器的基础上稍微加了点东西而已，根本不能算一个完整的系统，而即使是这样也花了他整整一年的时间。你懂我意思吧？
+> 哦还有，据记载，Linus Torvalds（Linux之父）并不是其中之一（指前文凭一己之力开发了整个操作系统的人物）。他写Linux内核的时候已经是研究生了，写了好几年的C语言。虽然不到十年，但是他把这个业余爱好写成了毕业论文，因此他有比绝大部分人都充足的时间花在这上面。无论如何，他1991年发布在USENET上的著名的Linux 0.0.1不过是在round-robin调度器的基础上稍微加了点东西而已，根本不能算一个完整的系统，而即使是这样也花了他整整一年的时间。你懂我意思吧？
 
 当然，来都来了，我不可能因为这个就被劝退，所以继续吧。
 
@@ -45,7 +45,7 @@
 
 本文教你安装GCC交叉编译器。所谓交叉编译器，就是让你在A平台(host)上编译，B平台(target)上运行。交叉编译器是OS开发必不可少的工具，毕竟你写的OS必须脱离host平台运行，而直接用host平台的原生编译器会让你的程序里掺杂host平台的库和头文件，以及其他host平台专用的东西。所以，我们可以选用i686-elf-gcc，它编译出的i686-elf程序是符合System V ABI标准的，它可以让你更方便地上手，因为该标准下还有很多配套的工具链可以使用（例如Binutils、GCC）。
 
-接下来我们会用到很多工具，其中大部分都需要我们自己编译和安装。下载源码时，建议先从[清华大学开源软件镜像站的GNU FTP镜像](https://mirrors.tuna.tsinghua.edu.cn/gnu/)开始找，然后是GitHub。GNU FTP真的不行，我下载时只有5KB/s的速度。下面是编译GCC所需的环境或依赖包：
+接下来我们会用到很多工具，其中一些需要我们自己从源码编译和安装。下载源码时，建议先从[清华大学开源软件镜像站的GNU FTP镜像](https://mirrors.tuna.tsinghua.edu.cn/gnu/)开始找，然后是GitHub。GNU FTP真的不行，我下载时只有5KB/s的速度。下面是编译GCC所需的环境或依赖包：
 
 - 类Unix环境
 - 内存和磁盘空间（看情况，256 MB也许不太够）
@@ -97,4 +97,5 @@ make install-gcc
 make install-target-libgcc
 ```
 
-很简单对吧？如果没问题，你现在已经可以执行`i686-elf-gcc --version并得到正确输出了。先睡一觉，明天继续更新。
+很简单对吧？如果没问题，你现在已经可以执行`i686-elf-gcc --version`并得到正确输出了。下一篇我们将介绍如何~~通过复制粘贴~~编写一个可在虚拟环境下运行的内核。
+
