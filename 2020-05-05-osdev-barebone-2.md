@@ -307,7 +307,7 @@ cp grub.cfg isodir/boot/grub/grub.cfg
 grub-mkrescue -o myos.iso isodir
 ```
 
-- 虚拟环境启动：运行`qemu-system-i386 -cdrom myos.iso`或者`qemu-system-i386 -kernel myos.bin`，都能启动内核，但可以看出前者调出了GRUB的图形界面，而后者没有，且存在一些小bug。
+- 虚拟环境启动：运行`qemu-system-i386 -cdrom myos.iso`或者`qemu-system-i386 -kernel myos.bin`，都能启动内核，但可以看出前者调出了GRUB的图形界面，而后者没有。
 - 真实环境启动：把myos.iso烧录至你的U盘、光盘或磁盘，然后插在电脑上，选择用外部存储介质启动！（我没敢试，哈哈）
 
 （全文完）
