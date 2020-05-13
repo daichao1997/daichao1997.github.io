@@ -37,16 +37,17 @@ LIBK_CFLAGS:=$(CFLAGS)
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_libk
 ```
 
-####`-ffreestanding`选项的含义
+#### `-ffreestanding`选项的含义
+
 这个选项我们在Bare Bone里就见过了，但当时说得比较模糊，现在我们对着GCC的文档来看：该选项将编译目标指定为“独立环境”。什么是独立环境呢？
 
-参考：https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html#C-Dialect-Options
+参考：[](https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html#C-Dialect-Options)
 
 > Assert that compilation targets a freestanding environment. This implies `-fno-builtin`. A freestanding environment is one in which the standard library may not exist, and program startup may not necessarily be at `main`. The most obvious example is an OS kernel. This is equivalent to `-fno-hosted`.
 
 #### Freestanding Environment
 
-参考：https://gcc.gnu.org/onlinedocs/gcc/Standards.html#Standards
+参考：[](https://gcc.gnu.org/onlinedocs/gcc/Standards.html#Standards)
 
 > The ISO C standard defines (in clause 4) two classes of conforming implementation. A conforming hosted implementation supports the whole standard including all the library facilities; a conforming freestanding implementation is only required to provide certain library facilities: those in `<float.h>`, `<limits.h>`, `<stdarg.h>`, and `<stddef.h>`; since AMD1, also those in `<iso646.h>`; since C99, also those in `<stdbool.h>` and `<stdint.h>`; and since C11, also those in `<stdalign.h>` and `<stdnoreturn.h>`. In addition, complex types, added in C99, are not required for freestanding implementations.
 
@@ -68,7 +69,7 @@ LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_libk
 
 #### 关于C标准库的一点补充
 
-参考：https://gcc.gnu.org/onlinedocs/gcc/Standard-Libraries.html#Standard-Libraries
+参考：[](https://gcc.gnu.org/onlinedocs/gcc/Standard-Libraries.html#Standard-Libraries)
 
 >GCC by itself attempts to be a conforming freestanding implementation. See [Language Standards Supported by GCC](https://gcc.gnu.org/onlinedocs/gcc/Standards.html#Standards), for details of what this means. Beyond the library facilities required of such an implementation, the rest of the C library is supplied by the vendor of the operating system. If that C library doesn’t conform to the C standards, then your programs might get warnings (especially when using -Wall) that you don’t expect.
 >
