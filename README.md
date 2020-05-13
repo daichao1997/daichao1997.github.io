@@ -1,5 +1,7 @@
 <!-- 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。 -->
 
+[[2020-05-13] 跟着OSDev网站搭建个人操作系统（四）](https://daichao1997.github.io/2020-05-13-meaty-skeleton-2.html)
+
 [[2020-05-09] 跟着OSDev网站搭建个人操作系统（三）](https://daichao1997.github.io/2020-05-09-meaty-skeleton-1.html)
 
 [[2020-05-05] 跟着OSDev网站搭建个人操作系统（二）](https://daichao1997.github.io/2020-05-05-osdev-barebone-2.html)
