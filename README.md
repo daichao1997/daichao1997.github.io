@@ -1,5 +1,7 @@
 <!-- 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。 -->
 
+[[2020-08-28] 《算法导论》第12章：二叉搜索树](https://daichao1997.github.io/leetcode/2020-08-28-itoa-ch12-bst.html)
+
 [[2020-07-13] 记一次愚蠢的Leetcode刷题](https://daichao1997.github.io/leetcode/2020-07-13-median-of-two-sorted-arrays.html)
 
 [[2020-05-13] 跟着OSDev网站搭建个人操作系统（四）](https://daichao1997.github.io/2020-05-13-meaty-skeleton-2.html)
