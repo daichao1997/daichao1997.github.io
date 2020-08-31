@@ -1,5 +1,7 @@
 <!-- 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。 -->
 
+[[2020-08-31] 《算法导论》第09章：中位数和顺序统计量 (Medians and Order Statistics)](https://daichao1997.github.io/2020-08-31-itoa-ch09-order_statistics.html)
+
 [[2020-08-31] 《算法导论》第21章：并查集 (Data Structures for Disjoint Sets)](https://daichao1997.github.io/2020-08-31-itoa-ch21-disjoint_set.html)
 
 [[2020-08-30] 《算法导论》第13章：红黑树 (Red-Black Trees)](https://daichao1997.github.io/2020-08-30-itoa-ch13-rbtree.html)
