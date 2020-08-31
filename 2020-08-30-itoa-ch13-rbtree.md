@@ -32,6 +32,8 @@
 
 ### 平衡二叉树的旋转操作
 
+![ch13-rbtree-rotation](/Users/daichao/daichao1997.github.io/pic/itoa/ch13-rbtree-rotation.png)
+
 “旋转”操作可以调整两棵子树的相对高度，并且维持BST的性质。设X的右子为Y，父亲为P，Y的左子为Z，那么“左旋”一个结点分为以下几步。书中代码的空间效率更高，但我觉得我的更方便记忆：认父亲ZXYP，收儿子PYXZ（倒过来）。
 
 1. Z拜X为父
