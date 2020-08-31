@@ -32,7 +32,7 @@
 
 ### 平衡二叉树的旋转操作
 
-![ch13-rbtree-rotation](/Users/daichao/daichao1997.github.io/pic/itoa/ch13-rbtree-rotation.png)
+![ch13-rbtree-rotation](https://daichao1997.github.io/pic/itoa/ch13-rbtree-rotation.png)
 
 “旋转”操作可以调整两棵子树的相对高度，并且维持BST的性质。设X的右子为Y，父亲为P，Y的左子为Z，那么“左旋”一个结点分为以下几步。书中代码的空间效率更高，但我觉得我的更方便记忆：认父亲ZXYP，收儿子PYXZ（倒过来）。
 
@@ -105,7 +105,7 @@ RB-INSERT-FIXUP(T,z)
 
 示意图是这样的：
 
-![ch13-rbtree-insert](/Users/daichao/daichao1997.github.io/pic/itoa/ch13-rbtree-insert.png)
+![ch13-rbtree-insert](https://daichao1997.github.io/pic/itoa/ch13-rbtree-insert.png)
 
 三个case是这样划分的：
 
@@ -243,4 +243,4 @@ RB-DELETE-FIXUP(T,x)
 
 下图灰色圈表示任意颜色，外面套的大圈表示y遗留下来的额外黑色。
 
-![ch13-rbtree-delete](/Users/daichao/daichao1997.github.io/pic/itoa/ch13-rbtree-delete.png)
+![ch13-rbtree-delete](https://daichao1997.github.io/pic/itoa/ch13-rbtree-delete.png)

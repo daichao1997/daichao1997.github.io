@@ -20,7 +20,7 @@
 
 MAKE-SET 和 FIND-SET 的实现自不必说，都只需要常数时间。UNION 需要遍历一个集合的所有元素，依次插入另一个集合的尾部，时间正比于前者的元素个数。最坏情况下，用 $n-1$ 次 UNION 合并 $n$ 个独立元素需要 $O(n^2)$ 时间。
 
-![ch21-linked_list](/Users/daichao/daichao1997.github.io/pic/itoa/ch21-linked_list.png)
+![ch21-linked_list](https://daichao1997.github.io/pic/itoa/ch21-linked_list.png)
 
 为了优化时间，我们可以在 dummy 记录每个集合的元素个数，然后每次 UNION 时都让更小的集合并入更大的集合。
 
