@@ -1,5 +1,9 @@
 <!-- 这里是我的[UVa题解](https://github.com/daichao1997/daichao1997.github.io/tree/master/uva)，愿能积少成多。 -->
 
+[[2020-09-01] 《算法导论》的翻译真叫一个垃圾！](https://daichao1997.github.io/2020-09-01-itoa-ch14-translation.html)
+
+[[2020-09-01] 《算法导论》第14章：数据结构的扩张 (Augmenting Data Structures)](https://daichao1997.github.io/2020-09-01-itoa-ch14-augment.html)
+
 [[2020-08-31] 《算法导论》第09章：中位数和顺序统计量 (Medians and Order Statistics)](https://daichao1997.github.io/2020-08-31-itoa-ch09-order_statistics.html)
 
 [[2020-08-31] 《算法导论》第21章：并查集 (Data Structures for Disjoint Sets)](https://daichao1997.github.io/2020-08-31-itoa-ch21-disjoint_set.html)
