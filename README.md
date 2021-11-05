@@ -2,8 +2,6 @@
 
 [[2021-11-05] OSDI 2020论文提要](https://daichao1997.github.io/2021-11-05-OSDI2020论文提要.html)
 
-2021-11-05-OSDI2021论文提要.md
-
 [[2020-09-01] 《算法导论》的翻译真叫一个垃圾！](https://daichao1997.github.io/2020-09-01-itoa-ch14-translation.html)
 
 [[2020-09-01] 《算法导论》第14章：数据结构的扩张 (Augmenting Data Structures)](https://daichao1997.github.io/2020-09-01-itoa-ch14-augment.html)
